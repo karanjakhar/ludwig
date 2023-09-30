@@ -902,6 +902,7 @@ class LudwigModel:
         output_directory: str = "results",
         return_type: Union[str, dict, pd.DataFrame] = pd.DataFrame,
         callbacks: Optional[List[Callback]] = None,
+        random_seed: int = default_random_seed,
         **kwargs,
     ) -> Tuple[Union[dict, pd.DataFrame], str]:
         """Using a trained model, make predictions from the provided dataset.
@@ -935,6 +936,9 @@ class LudwigModel:
                 returned predictions.
             :param callbacks: (Optional[List[Callback]], default: None) optional list of callbacks to use during this
                 predict operation. Any callbacks already registered to the model will be preserved.
+            :param random_seed: (int, default: `42`) a random seed that will be
+            used anywhere there is a call to a random number generator: data
+            splitting, parameter initialization and training set shuffling
 
         # Return
 
@@ -942,7 +946,9 @@ class LudwigModel:
                 `predictions` predictions from the provided dataset,
                 `output_directory` filepath string to where data was stored.
         """
-        self._check_initialization()
+        if not self.model:
+            self.model = LudwigModel.create_model(self.config_obj, random_seed=random_seed)
+        # self._check_initialization()
 
         # preprocessing
         logger.debug("Preprocessing")
