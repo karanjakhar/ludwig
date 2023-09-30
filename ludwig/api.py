@@ -948,7 +948,8 @@ class LudwigModel:
         """
         if not self.model:
             self.model = LudwigModel.create_model(self.config_obj, random_seed=random_seed)
-        # self._check_initialization()
+            update_config_with_model(self.config_obj, self.model)
+            set_saved_weights_in_checkpoint_flag(self.config_obj)
 
         # preprocessing
         logger.debug("Preprocessing")
